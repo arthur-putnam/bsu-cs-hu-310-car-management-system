@@ -29,31 +29,8 @@ public class CarManagementSystem {
         Statement sqlStatement = null;
 
         try {
-            connection = Database.getDatabaseConnection();
-            sqlStatement = connection.createStatement();
-
-            String sql = "SELECT * FROM cars;";
-            ResultSet resultSet = sqlStatement.executeQuery(sql);
-
-            System.out.println("car_id | make | model | category | year | condition | kelly_bluebook_price");
-            System.out.println("-".repeat(80));
-
-            while (resultSet.next()) {
-                int carId = resultSet.getInt("car_id");
-                String make = resultSet.getString("make");
-                String model = resultSet.getString("model");
-                String category = resultSet.getString("category");
-                String year = resultSet.getString("year");
-                String condition = resultSet.getString("condition");
-                float kellyBluebookPrice = resultSet.getFloat("kelly_bluebook_price");
-
-                String output = String.format(
-                        "%s | %s | %s | %s | %s | %s | $%s ",
-                        carId, make, model, category, year, condition, kellyBluebookPrice);
-                System.out.println(output);
-            }
-
-            resultSet.close();
+            /* Your logic goes here */
+            throw new SQLException(); // REMOVE THIS (this is just to force it to compile)
         } catch (SQLException sqlException) {
             System.out.println("Failed to get cars");
             System.out.println(sqlException.getMessage());
@@ -82,29 +59,8 @@ public class CarManagementSystem {
         Statement sqlStatement = null;
 
         try {
-            connection = Database.getDatabaseConnection();
-            sqlStatement = connection.createStatement();
-
-            String sql = "SELECT * FROM car_sales;";
-            ResultSet resultSet = sqlStatement.executeQuery(sql);
-
-            System.out.println("sale_id | car_id | customer_id | sale_amount | sales_date");
-            System.out.println("-".repeat(80));
-
-            while (resultSet.next()) {
-                int saleId = resultSet.getInt("sale_id");
-                int carId = resultSet.getInt("car_id");
-                int customerId = resultSet.getInt("customer_id");
-                float saleAmount = resultSet.getFloat("sale_amount");
-                Timestamp salesDate = resultSet.getTimestamp("sales_date");
-
-                String output = String.format(
-                        "%s | %s | %s | %s | %s",
-                        saleId, carId, customerId, saleAmount, salesDate);
-                System.out.println(output);
-            }
-
-            resultSet.close();
+            /* Your logic goes here */
+            throw new SQLException(); // REMOVE THIS (this is just to force it to compile)
         } catch (SQLException sqlException) {
             System.out.println("Failed to get sales");
             System.out.println(sqlException.getMessage());
@@ -132,28 +88,8 @@ public class CarManagementSystem {
         Statement sqlStatement = null;
 
         try {
-            connection = Database.getDatabaseConnection();
-            sqlStatement = connection.createStatement();
-
-            String sql = "SELECT * FROM car_purchases;";
-            ResultSet resultSet = sqlStatement.executeQuery(sql);
-
-            System.out.println("purchase_id | car_id | purchase_amount | purchase_date");
-            System.out.println("-".repeat(80));
-
-            while (resultSet.next()) {
-                int purchaseId = resultSet.getInt("purchase_id");
-                int carId = resultSet.getInt("car_id");
-                float purchaseAmount = resultSet.getFloat("purchase_amount");
-                Timestamp purchaseDate = resultSet.getTimestamp("purchase_date");
-
-                String output = String.format(
-                        "%s | %s | %s | %s",
-                        purchaseId, carId, purchaseAmount, purchaseDate);
-                System.out.println(output);
-            }
-
-            resultSet.close();
+            /* Your logic goes here */
+            throw new SQLException(); // REMOVE THIS (this is just to force it to compile)
         } catch (SQLException sqlException) {
             System.out.println("Failed to get purchases");
             System.out.println(sqlException.getMessage());
@@ -182,30 +118,8 @@ public class CarManagementSystem {
         Statement sqlStatement = null;
 
         try {
-            connection = Database.getDatabaseConnection();
-            sqlStatement = connection.createStatement();
-
-            String sql = "SELECT * FROM customers;";
-            ResultSet resultSet = sqlStatement.executeQuery(sql);
-
-            System.out.println("customer_id | first_name | last_name | phone_number | email");
-            System.out.println("-".repeat(80));
-
-            while (resultSet.next()) {
-                int customerId = resultSet.getInt("customer_id");
-                String firstName = resultSet.getString("first_name");
-                String lastName = resultSet.getString("last_name");
-                String phoneNumber = resultSet.getString("phone_number");
-                String email = resultSet.getString("email");
-
-
-                String output = String.format(
-                        "%s | %s | %s | %s | %s",
-                        customerId, firstName, lastName, phoneNumber, email);
-                System.out.println(output);
-            }
-
-            resultSet.close();
+            /* Your logic goes here */
+            throw new SQLException(); // REMOVE THIS (this is just to force it to compile)
         } catch (SQLException sqlException) {
             System.out.println("Failed to get customers");
             System.out.println(sqlException.getMessage());
@@ -235,37 +149,8 @@ public class CarManagementSystem {
         Statement sqlStatement = null;
 
         try {
-            connection = Database.getDatabaseConnection();
-            sqlStatement = connection.createStatement();
-
-            String sql = "SELECT \r\n"
-                    + "	cars.*\r\n"
-                    + "FROM cars\r\n"
-                    + "WHERE NOT EXISTS (\r\n"
-                    + "	SELECT 1\r\n"
-                    + "    FROM car_sales WHERE car_sales.car_id = cars.car_id \r\n"
-                    + ");";
-            ResultSet resultSet = sqlStatement.executeQuery(sql);
-
-            System.out.println("car_id | make | model | category | year | condition | kelly_bluebook_price");
-            System.out.println("-".repeat(80));
-
-            while (resultSet.next()) {
-                int carId = resultSet.getInt("car_id");
-                String make = resultSet.getString("make");
-                String model = resultSet.getString("model");
-                String category = resultSet.getString("category");
-                String year = resultSet.getString("year");
-                String condition = resultSet.getString("condition");
-                float kelly_bluebook_price = resultSet.getFloat("kelly_bluebook_price");
-
-                String output = String.format(
-                        "%s | %s | %s | %s | %s | %s | $%s ",
-                        carId, make, model, category, year, condition, kelly_bluebook_price);
-                System.out.println(output);
-            }
-
-            resultSet.close();
+            /* Your logic goes here */
+            throw new SQLException(); // REMOVE THIS (this is just to force it to compile)
         } catch (SQLException sqlException) {
             System.out.println("Failed to get available cars for sale");
             System.out.println(sqlException.getMessage());
@@ -294,41 +179,8 @@ public class CarManagementSystem {
         Statement sqlStatement = null;
 
         try {
-            connection = Database.getDatabaseConnection();
-            sqlStatement = connection.createStatement();
-
-            String sql = "SELECT \r\n"
-                    + "	cars.*,\r\n"
-                    + "	car_sales.sale_amount,\r\n"
-                    + "    car_sales.sales_date\r\n"
-                    + "FROM cars\r\n"
-                    + "JOIN car_sales ON cars.car_id = car_sales.car_id\r\n"
-                    + "WHERE MONTH(sales_date) = MONTH(CURRENT_DATE);";
-            ResultSet resultSet = sqlStatement.executeQuery(sql);
-
-            System.out.println("car_id | make | model | category | year | condition | kelly_bluebook_price "
-                    + "| sale_amount | sale_date");
-            System.out.println("-".repeat(80));
-
-            while (resultSet.next()) {
-                int carId = resultSet.getInt("car_id");
-                String make = resultSet.getString("make");
-                String model = resultSet.getString("model");
-                String category = resultSet.getString("category");
-                String year = resultSet.getString("year");
-                String condition = resultSet.getString("condition");
-                float kelly_bluebook_price = resultSet.getFloat("kelly_bluebook_price");
-                float sale_amount = resultSet.getFloat("sale_amount");
-                Timestamp sales_date = resultSet.getTimestamp("sales_date");
-
-                String output = String.format(
-                        "%s | %s | %s | %s | %s | %s | $%s | $%s | %s",
-                        carId, make, model, category, year, condition, kelly_bluebook_price,
-                        sale_amount, sales_date);
-                System.out.println(output);
-            }
-
-            resultSet.close();
+            /* Your logic goes here */
+            throw new SQLException(); // REMOVE THIS (this is just to force it to compile)
         } catch (SQLException sqlException) {
             System.out.println("Failed to get sales for this month");
             System.out.println(sqlException.getMessage());
@@ -358,37 +210,8 @@ public class CarManagementSystem {
         Statement sqlStatement = null;
 
         try {
-            connection = Database.getDatabaseConnection();
-            sqlStatement = connection.createStatement();
-
-            String sql = "SELECT \r\n"
-                    + "	* \r\n"
-                    + "FROM cars \r\n"
-                    + "JOIN car_sales ON cars.car_id = car_sales.car_id\r\n"
-                    + "JOIN customers ON car_sales.customer_id = customers.customer_id\r\n"
-                    + "WHERE first_name = '%s' AND last_name = '%s';";
-            sql = String.format(sql, firstName, lastName);
-            ResultSet resultSet = sqlStatement.executeQuery(sql);
-
-            System.out.println("car_id | make | model | category | year | condition | kelly_bluebook_price");
-            System.out.println("-".repeat(80));
-
-            while (resultSet.next()) {
-                int carId = resultSet.getInt("car_id");
-                String make = resultSet.getString("make");
-                String model = resultSet.getString("model");
-                String category = resultSet.getString("category");
-                String year = resultSet.getString("year");
-                String condition = resultSet.getString("condition");
-                float kelly_bluebook_price = resultSet.getFloat("kelly_bluebook_price");
-
-                String output = String.format(
-                        "%s | %s | %s | %s | %s | %s | $%s ",
-                        carId, make, model, category, year, condition, kelly_bluebook_price);
-                System.out.println(output);
-            }
-
-            resultSet.close();
+            /* Your logic goes here */
+            throw new SQLException(); // REMOVE THIS (this is just to force it to compile)
         } catch (SQLException sqlException) {
             System.out.println("Failed to get all cars by customer");
             System.out.println(sqlException.getMessage());
@@ -419,39 +242,8 @@ public class CarManagementSystem {
         Statement sqlStatement = null;
 
         try {
-            connection = Database.getDatabaseConnection();
-            sqlStatement = connection.createStatement();
-
-            String sql = "INSERT INTO customers (first_name, last_name, phone_number, email)\r\n"
-                    + "VALUES ('%s', '%s', '%s','%s');";
-            sql = String.format(sql, firstName, lastName, phoneNumber, email);
-
-            // We will need the customer_id since we want to display it and the 
-            // database generates this. When inserting data, by default MySQL does
-            // not return any information other than the number of rows inserted. 
-            // To get around this we can pass the RETURN_GENERATED_KEYS argument
-            // in order to get the generated keys aka our customer id value.
-
-            int rows = sqlStatement.executeUpdate(sql, Statement.RETURN_GENERATED_KEYS);
-
-            // This resultset only contains the generated keys (aka customer_id)
-            ResultSet resultSet = sqlStatement.getGeneratedKeys();
-
-            System.out.println("customer_id | first_name | last_name | phone_number | email");
-            System.out.println("-".repeat(80));
-
-            // We only need to get the generated id from the database
-            // since we already have the other information because
-            // it was part of the input arguments
-            resultSet.next();
-            int customerId = resultSet.getInt(1);
-
-            String output = String.format(
-                    "%s | %s | %s | %s | %s ",
-                    customerId, firstName, lastName, phoneNumber, email);
-            System.out.println(output);
-
-            resultSet.close();
+            /* Your logic goes here */
+            throw new SQLException(); // REMOVE THIS (this is just to force it to compile)
         } catch (SQLException sqlException) {
             System.out.println("Failed to create new customer");
             System.out.println(sqlException.getMessage());
@@ -479,19 +271,8 @@ public class CarManagementSystem {
         Statement sqlStatement = null;
 
         try {
-            connection = Database.getDatabaseConnection();
-            sqlStatement = connection.createStatement();
-
-            String sql = "DELETE FROM customers WHERE customer_id = %s";
-            sql = String.format(sql, customerId);
-
-            int rows = sqlStatement.executeUpdate(sql, Statement.RETURN_GENERATED_KEYS);
-
-            if (rows > 0) {
-                System.out.println("Customer was deleted.");
-            } else {
-                System.out.println("Customer was not found.");
-            }
+            /* Your logic goes here */
+            throw new SQLException(); // REMOVE THIS (this is just to force it to compile)
         } catch (SQLException sqlException) {
             System.out.println("Failed to delete customer");
             System.out.println(sqlException.getMessage());
@@ -527,47 +308,8 @@ public class CarManagementSystem {
         Statement sqlStatement = null;
 
         try {
-            connection = Database.getDatabaseConnection();
-            sqlStatement = connection.createStatement();
-
-            // We want to manually control the transaction
-            connection.setAutoCommit(false);
-
-            String sql = "INSERT INTO cars (make, model, category, year, `condition`, kelly_bluebook_price)\r\n"
-                    + "VALUES ('%s', '%s', '%s','%s','%s','%s');";
-            sql = String.format(sql, make, model, category, year, condition, kbp);
-
-            // Add the car to the database
-            int rows = sqlStatement.executeUpdate(sql, Statement.RETURN_GENERATED_KEYS);
-
-            // Get the car's car_id
-            ResultSet resultSet = sqlStatement.getGeneratedKeys();
-            resultSet.next();
-            int carId = resultSet.getInt(1);
-
-            // Now we need to insert a purchase record with the new car id.
-            sql = "INSERT INTO car_purchases (car_id, purchase_amount, purchase_date) "
-                    + "VALUES ('%s', '%s', STR_TO_DATE('%s', '%%m/%%d/%%Y'));";
-            sql = String.format(sql, carId, purchaseAmount, purchaseDate);
-
-            // Create the purchase record
-            rows = sqlStatement.executeUpdate(sql, Statement.RETURN_GENERATED_KEYS);
-            resultSet = sqlStatement.getGeneratedKeys();
-            resultSet.next();
-            int purchaseId = resultSet.getInt(1);
-
-            // Finish the transaction
-            connection.commit();
-
-            System.out.println("purchase_id | car_id | purchase_amount | purchase_date ");
-            System.out.println("-".repeat(80));
-
-            String output = String.format(
-                    "%s | %s | %s | %s",
-                    purchaseId, carId, purchaseAmount, purchaseDate);
-            System.out.println(output);
-
-            resultSet.close();
+            /* Your logic goes here */
+            throw new SQLException(); // REMOVE THIS (this is just to force it to compile)
         } catch (SQLException sqlException) {
             System.out.println("Failed to create car purchase");
             System.out.println(sqlException.getMessage());
@@ -606,39 +348,8 @@ public class CarManagementSystem {
         Statement sqlStatement = null;
 
         try {
-            connection = Database.getDatabaseConnection();
-            sqlStatement = connection.createStatement();
-            // This query checks that no sale record exists for the car before inserting
-            // it into the database.
-            String sql = "INSERT INTO car_sales (car_id, customer_id, sale_amount, sales_date)\n" +
-                    "SELECT  %s , %s,  %s, STR_TO_DATE('%s', '%%m/%%d/%%Y') \n" +
-                    "WHERE NOT EXISTS (SELECT 1\n" +
-                    "                   FROM car_sales\n" +
-                    "                   WHERE  car_id = %s );";
-            sql = String.format(sql, carId, customerId, saleAmount, saleDate, carId);
-
-            int rows = sqlStatement.executeUpdate(sql, Statement.RETURN_GENERATED_KEYS);
-
-            // check if the sale was inserted.
-            if (rows > 0) {
-                ResultSet resultSet = sqlStatement.getGeneratedKeys();
-                resultSet.next();
-                int saleId = resultSet.getInt(1);
-
-                System.out.println("sale_id | car_id | customer_id | sale_amount | sales_date");
-                System.out.println("-".repeat(80));
-
-                String output = String.format(
-                        "%s | %s | %s | %s | %s",
-                        saleId, carId, customerId, saleAmount, saleDate);
-                System.out.println(output);
-
-                resultSet.close();
-            } else {
-                System.out.println("Failed to sale the car. The car has already been sold.");
-            }
-
-
+            /* Your logic goes here */
+            throw new SQLException(); // REMOVE THIS (this is just to force it to compile)
         } catch (SQLException sqlException) {
             System.out.println("Failed to sale car");
             System.out.println(sqlException.getMessage());
