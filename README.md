@@ -1,4 +1,10 @@
-# BSU CS HU-310 School Management Final Project
+# BSU CS HU 310 Car Management System Sample Project
+The purpose of this application is to provide examples similar to
+the final project. This application will read and write data
+from a MySQL database. The data in this database will be used to
+manage things a car dealership might be interested in tracking.
+For example, who has bought a car, what cars are for sale, etc.
+
 
 # System Requirements
 * [Java (JDK)](https://www.oracle.com/java/technologies/javase/javase-jdk8-downloads.html)
@@ -14,7 +20,7 @@ This project requires that the following environment variables set:
 * CS310_HOST - The database management system host
 * CS310_USERNAME - The database management system username
 * CS310_PASSWORD - The database management system user's password
-* CS310_DATABASE - The name of the database in the database management system
+
 
 ## Database Driver
 Additionally, a MySQL database driver must be added to the class path. This

@@ -1,6 +1,6 @@
 run: compile .run
 .run:
-	cd src && java SchoolManagementSystem
+	cd src && java CarManagementSystem
 
 compile: .compile
 .compile:

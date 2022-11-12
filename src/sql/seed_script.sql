@@ -2,7 +2,7 @@
   Run this SQL file to delete existing data and populate your database with
   sample data.
 
-  NOTE: This will DELETE ALL data in your final project tables.
+  NOTE: This will DELETE ALL data in your project tables.
 */
 USE car_management_system;
 SET FOREIGN_KEY_CHECKS = 0;

@@ -6,21 +6,30 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * The purpose of this application is to provide examples similar to 
- * the final project. This application will take read and write data 
+ * The purpose of this application is to provide examples similar to
+ * the final project. This application will read and write data
  * from a MySQL database. The data in this database will be used to
- * manage things a car dealership might be interested in tracking. 
- * For example, who has bought a car, what cars are for sale, etc. 
+ * manage things a car dealership might be interested in tracking.
+ * For example, who has bought a car, what cars are for sale, etc.
+ *
+ * NOTE: This project is geared towards learning and focuses on basic
+ * application to database communication. It needs to include some
+ * best practices, such as using prepared statements and input
+ * sanitization, before use in any production environment.
  */
 public class CarManagementSystem {
 
-	
-	public static void listCars() {
+
+    /**
+     * This method will query all of the cars from the database and print them
+     * out in a table like style.
+     */
+    public static void listCars() {
         Connection connection = null;
         Statement sqlStatement = null;
 
         try {
-        	connection = Database.getDatabaseConnection();
+            connection = Database.getDatabaseConnection();
             sqlStatement = connection.createStatement();
 
             String sql = "SELECT * FROM cars;";
@@ -36,13 +45,15 @@ public class CarManagementSystem {
                 String category = resultSet.getString("category");
                 String year = resultSet.getString("year");
                 String condition = resultSet.getString("condition");
-                float kelly_bluebook_price = resultSet.getFloat("kelly_bluebook_price");
+                float kellyBluebookPrice = resultSet.getFloat("kelly_bluebook_price");
 
                 String output = String.format(
-                		"%s | %s | %s | %s | %s | %s | $%s ",
-                		carId, make, model, category, year, condition, kelly_bluebook_price);
+                        "%s | %s | %s | %s | %s | %s | $%s ",
+                        carId, make, model, category, year, condition, kellyBluebookPrice);
                 System.out.println(output);
             }
+
+            resultSet.close();
         } catch (SQLException sqlException) {
             System.out.println("Failed to get cars");
             System.out.println(sqlException.getMessage());
@@ -60,14 +71,18 @@ public class CarManagementSystem {
                 se.printStackTrace();
             }
         }
-	}
-    
-	public static void listSales() {
+    }
+
+    /**
+     * This method will query all of the sales from the database and print them
+     * out in a table like style.
+     */
+    public static void listSales() {
         Connection connection = null;
         Statement sqlStatement = null;
 
         try {
-        	connection = Database.getDatabaseConnection();
+            connection = Database.getDatabaseConnection();
             sqlStatement = connection.createStatement();
 
             String sql = "SELECT * FROM car_sales;";
@@ -84,19 +99,20 @@ public class CarManagementSystem {
                 Timestamp salesDate = resultSet.getTimestamp("sales_date");
 
                 String output = String.format(
-                		"%s | %s | %s | %s | %s",
-                		saleId, carId, customerId, saleAmount, salesDate);
+                        "%s | %s | %s | %s | %s",
+                        saleId, carId, customerId, saleAmount, salesDate);
                 System.out.println(output);
             }
+
+            resultSet.close();
         } catch (SQLException sqlException) {
             System.out.println("Failed to get sales");
             System.out.println(sqlException.getMessage());
 
         } finally {
             try {
-                if (sqlStatement != null)
-                    sqlStatement.close();
-            } catch (SQLException se2) {
+                if (sqlStatement != null) sqlStatement.close();
+            } catch (SQLException se) {
             }
             try {
                 if (connection != null)
@@ -106,13 +122,17 @@ public class CarManagementSystem {
             }
         }
     }
-    
+
+    /**
+     * This method will query all of the purchases from the database and print
+     * them out in a table like style.
+     */
     public static void listPurchases() {
         Connection connection = null;
         Statement sqlStatement = null;
 
         try {
-        	connection = Database.getDatabaseConnection();
+            connection = Database.getDatabaseConnection();
             sqlStatement = connection.createStatement();
 
             String sql = "SELECT * FROM car_purchases;";
@@ -128,10 +148,12 @@ public class CarManagementSystem {
                 Timestamp purchaseDate = resultSet.getTimestamp("purchase_date");
 
                 String output = String.format(
-                		"%s | %s | %s | %s",
-                		purchaseId, carId, purchaseAmount, purchaseDate);
+                        "%s | %s | %s | %s",
+                        purchaseId, carId, purchaseAmount, purchaseDate);
                 System.out.println(output);
             }
+
+            resultSet.close();
         } catch (SQLException sqlException) {
             System.out.println("Failed to get purchases");
             System.out.println(sqlException.getMessage());
@@ -150,13 +172,17 @@ public class CarManagementSystem {
             }
         }
     }
-    
+
+    /**
+     * This method will query all of the customers from the database and print
+     * them out in a table like style.
+     */
     public static void listCustomers() {
         Connection connection = null;
         Statement sqlStatement = null;
 
         try {
-        	connection = Database.getDatabaseConnection();
+            connection = Database.getDatabaseConnection();
             sqlStatement = connection.createStatement();
 
             String sql = "SELECT * FROM customers;";
@@ -171,13 +197,15 @@ public class CarManagementSystem {
                 String lastName = resultSet.getString("last_name");
                 String phoneNumber = resultSet.getString("phone_number");
                 String email = resultSet.getString("email");
-            
+
 
                 String output = String.format(
-                		"%s | %s | %s | %s | %s",
-                		customerId, firstName, lastName, phoneNumber, email);
+                        "%s | %s | %s | %s | %s",
+                        customerId, firstName, lastName, phoneNumber, email);
                 System.out.println(output);
             }
+
+            resultSet.close();
         } catch (SQLException sqlException) {
             System.out.println("Failed to get customers");
             System.out.println(sqlException.getMessage());
@@ -196,22 +224,27 @@ public class CarManagementSystem {
             }
         }
     }
-    
+
+    /**
+     * This method will query all of the cars that are available for sale from
+     * the database and print them out in a table like style. We know a car is
+     * available for sell if the dealership has not sold it yet.
+     */
     public static void listAvailableCarsForSale() {
         Connection connection = null;
         Statement sqlStatement = null;
 
         try {
-        	connection = Database.getDatabaseConnection();
+            connection = Database.getDatabaseConnection();
             sqlStatement = connection.createStatement();
 
             String sql = "SELECT \r\n"
-            		+ "	cars.*\r\n"
-            		+ "FROM cars\r\n"
-            		+ "WHERE NOT EXISTS (\r\n"
-            		+ "	SELECT 1\r\n"
-            		+ "    FROM car_sales WHERE car_sales.car_id = cars.car_id \r\n"
-            		+ ");";
+                    + "	cars.*\r\n"
+                    + "FROM cars\r\n"
+                    + "WHERE NOT EXISTS (\r\n"
+                    + "	SELECT 1\r\n"
+                    + "    FROM car_sales WHERE car_sales.car_id = cars.car_id \r\n"
+                    + ");";
             ResultSet resultSet = sqlStatement.executeQuery(sql);
 
             System.out.println("car_id | make | model | category | year | condition | kelly_bluebook_price");
@@ -227,10 +260,12 @@ public class CarManagementSystem {
                 float kelly_bluebook_price = resultSet.getFloat("kelly_bluebook_price");
 
                 String output = String.format(
-                		"%s | %s | %s | %s | %s | %s | $%s ",
-                		carId, make, model, category, year, condition, kelly_bluebook_price);
+                        "%s | %s | %s | %s | %s | %s | $%s ",
+                        carId, make, model, category, year, condition, kelly_bluebook_price);
                 System.out.println(output);
             }
+
+            resultSet.close();
         } catch (SQLException sqlException) {
             System.out.println("Failed to get available cars for sale");
             System.out.println(sqlException.getMessage());
@@ -250,25 +285,29 @@ public class CarManagementSystem {
         }
     }
 
+    /**
+     * This method will query all of the sales that were made this month
+     * from the database and print them out in a table like style.
+     */
     public static void listSalesThisMonth() {
         Connection connection = null;
         Statement sqlStatement = null;
 
         try {
-        	connection = Database.getDatabaseConnection();
+            connection = Database.getDatabaseConnection();
             sqlStatement = connection.createStatement();
 
             String sql = "SELECT \r\n"
-            		+ "	cars.*,\r\n"
-            		+ "	car_sales.sale_amount,\r\n"
-            		+ "    car_sales.sales_date\r\n"
-            		+ "FROM cars\r\n"
-            		+ "JOIN car_sales ON cars.car_id = car_sales.car_id\r\n"
-            		+ "WHERE MONTH(sales_date) = MONTH(CURRENT_DATE);";
+                    + "	cars.*,\r\n"
+                    + "	car_sales.sale_amount,\r\n"
+                    + "    car_sales.sales_date\r\n"
+                    + "FROM cars\r\n"
+                    + "JOIN car_sales ON cars.car_id = car_sales.car_id\r\n"
+                    + "WHERE MONTH(sales_date) = MONTH(CURRENT_DATE);";
             ResultSet resultSet = sqlStatement.executeQuery(sql);
 
             System.out.println("car_id | make | model | category | year | condition | kelly_bluebook_price "
-            		+ "| sale_amount | sale_date");
+                    + "| sale_amount | sale_date");
             System.out.println("-".repeat(80));
 
             while (resultSet.next()) {
@@ -283,11 +322,13 @@ public class CarManagementSystem {
                 Timestamp sales_date = resultSet.getTimestamp("sales_date");
 
                 String output = String.format(
-                		"%s | %s | %s | %s | %s | %s | $%s | $%s | %s",
-                		carId, make, model, category, year, condition, kelly_bluebook_price, 
-                		sale_amount, sales_date );
+                        "%s | %s | %s | %s | %s | %s | $%s | $%s | %s",
+                        carId, make, model, category, year, condition, kelly_bluebook_price,
+                        sale_amount, sales_date);
                 System.out.println(output);
             }
+
+            resultSet.close();
         } catch (SQLException sqlException) {
             System.out.println("Failed to get sales for this month");
             System.out.println(sqlException.getMessage());
@@ -307,20 +348,25 @@ public class CarManagementSystem {
         }
     }
 
-	public static void listAllCarsByCustomer(String firstName, String lastName) {
+    /**
+     * This method will query all of the cars that are owned by a specific
+     * customer from the database and print them out in a table like style.
+     * We know a car "belongs" to a customer if it was sold to them.
+     */
+    public static void listAllCarsByCustomer(String firstName, String lastName) {
         Connection connection = null;
         Statement sqlStatement = null;
 
         try {
-        	connection = Database.getDatabaseConnection();
+            connection = Database.getDatabaseConnection();
             sqlStatement = connection.createStatement();
 
             String sql = "SELECT \r\n"
-            		+ "	* \r\n"
-            		+ "FROM cars \r\n"
-            		+ "JOIN car_sales ON cars.car_id = car_sales.car_id\r\n"
-            		+ "JOIN customers ON car_sales.customer_id = customers.customer_id\r\n"
-            		+ "WHERE first_name = '%s' AND last_name = '%s';";
+                    + "	* \r\n"
+                    + "FROM cars \r\n"
+                    + "JOIN car_sales ON cars.car_id = car_sales.car_id\r\n"
+                    + "JOIN customers ON car_sales.customer_id = customers.customer_id\r\n"
+                    + "WHERE first_name = '%s' AND last_name = '%s';";
             sql = String.format(sql, firstName, lastName);
             ResultSet resultSet = sqlStatement.executeQuery(sql);
 
@@ -337,12 +383,12 @@ public class CarManagementSystem {
                 float kelly_bluebook_price = resultSet.getFloat("kelly_bluebook_price");
 
                 String output = String.format(
-                		"%s | %s | %s | %s | %s | %s | $%s ",
-                		carId, make, model, category, year, condition, kelly_bluebook_price);
+                        "%s | %s | %s | %s | %s | %s | $%s ",
+                        carId, make, model, category, year, condition, kelly_bluebook_price);
                 System.out.println(output);
             }
-           
-            
+
+            resultSet.close();
         } catch (SQLException sqlException) {
             System.out.println("Failed to get all cars by customer");
             System.out.println(sqlException.getMessage());
@@ -362,46 +408,50 @@ public class CarManagementSystem {
         }
 
     }
-	
 
+
+    /**
+     * This method will add a new customer to the system by inserting a new
+     * customer record into the database.
+     */
     public static void createNewCustomer(String firstName, String lastName, String phoneNumber, String email) {
         Connection connection = null;
         Statement sqlStatement = null;
 
         try {
-        	connection = Database.getDatabaseConnection();
+            connection = Database.getDatabaseConnection();
             sqlStatement = connection.createStatement();
 
             String sql = "INSERT INTO customers (first_name, last_name, phone_number, email)\r\n"
-            		+ "VALUES ('%s', '%s', '%s','%s');";
+                    + "VALUES ('%s', '%s', '%s','%s');";
             sql = String.format(sql, firstName, lastName, phoneNumber, email);
-            
+
             // We will need the customer_id since we want to display it and the 
             // database generates this. When inserting data, by default MySQL does
             // not return any information other than the number of rows inserted. 
             // To get around this we can pass the RETURN_GENERATED_KEYS argument
             // in order to get the generated keys aka our customer id value.
-            
+
             int rows = sqlStatement.executeUpdate(sql, Statement.RETURN_GENERATED_KEYS);
-            
+
             // This resultset only contains the generated keys (aka customer_id)
             ResultSet resultSet = sqlStatement.getGeneratedKeys();
 
             System.out.println("customer_id | first_name | last_name | phone_number | email");
             System.out.println("-".repeat(80));
 
-        	// We only need to get the generated id from the database
-        	// since we already have the other information because
-        	// it was part of the input arguments
+            // We only need to get the generated id from the database
+            // since we already have the other information because
+            // it was part of the input arguments
             resultSet.next();
             int customerId = resultSet.getInt(1);
-            
+
             String output = String.format(
-            		"%s | %s | %s | %s | %s ",
-            		customerId, firstName, lastName, phoneNumber, email);
+                    "%s | %s | %s | %s | %s ",
+                    customerId, firstName, lastName, phoneNumber, email);
             System.out.println(output);
-           
-           
+
+            resultSet.close();
         } catch (SQLException sqlException) {
             System.out.println("Failed to create new customer");
             System.out.println(sqlException.getMessage());
@@ -421,23 +471,26 @@ public class CarManagementSystem {
         }
     }
 
+    /**
+     * This method will delete a customer from the database.
+     */
     public static void deleteCustomer(String customerId) {
         Connection connection = null;
         Statement sqlStatement = null;
 
         try {
-        	connection = Database.getDatabaseConnection();
+            connection = Database.getDatabaseConnection();
             sqlStatement = connection.createStatement();
 
             String sql = "DELETE FROM customers WHERE customer_id = %s";
             sql = String.format(sql, customerId);
-           
+
             int rows = sqlStatement.executeUpdate(sql, Statement.RETURN_GENERATED_KEYS);
-            
+
             if (rows > 0) {
-            	System.out.println("Customer was deleted.");
+                System.out.println("Customer was deleted.");
             } else {
-            	System.out.println("Customer was not found.");
+                System.out.println("Customer was not found.");
             }
         } catch (SQLException sqlException) {
             System.out.println("Failed to delete customer");
@@ -458,41 +511,45 @@ public class CarManagementSystem {
         }
     }
 
+    /**
+     * This method will handle purchasing a car. Specifically, it will add the
+     * car and purchase records to the database and print out the purchase
+     * information.
+     *
+     * Note: When a dealership purchases a car they need to first add the car
+     * to the database and then add the purchase which references the car to
+     * the database.
+     */
     public static void purchaseCar(String make, String model, String category, String year,
-    								  String condition, String kbp, String purchaseAmount, 
-    								  String purchaseDate) {
+                                   String condition, String kbp, String purchaseAmount,
+                                   String purchaseDate) {
         Connection connection = null;
         Statement sqlStatement = null;
 
         try {
-            
-        	// Create car
-        	// Create purchase
-        	
-        	connection = Database.getDatabaseConnection();
+            connection = Database.getDatabaseConnection();
             sqlStatement = connection.createStatement();
-            
+
             // We want to manually control the transaction
             connection.setAutoCommit(false);
-            
+
             String sql = "INSERT INTO cars (make, model, category, year, `condition`, kelly_bluebook_price)\r\n"
-            		+ "VALUES ('%s', '%s', '%s','%s','%s','%s');";
-            sql = String.format(sql,  make,  model,  category,  year,condition, kbp);
-        	
-            
-            // Create the car
+                    + "VALUES ('%s', '%s', '%s','%s','%s','%s');";
+            sql = String.format(sql, make, model, category, year, condition, kbp);
+
+            // Add the car to the database
             int rows = sqlStatement.executeUpdate(sql, Statement.RETURN_GENERATED_KEYS);
-            
+
             // Get the car's car_id
             ResultSet resultSet = sqlStatement.getGeneratedKeys();
             resultSet.next();
             int carId = resultSet.getInt(1);
-            
+
             // Now we need to insert a purchase record with the new car id.
-            sql = "INSERT INTO car_purchases (car_id, purchase_amount, purchase_date)\r\n"
-            		+ "VALUES ('%s', '%s', STR_TO_DATE('%s', '%%m/%%d/%%Y'));";
-            sql = String.format(sql,  carId,  purchaseAmount,  purchaseDate);
-            
+            sql = "INSERT INTO car_purchases (car_id, purchase_amount, purchase_date) "
+                    + "VALUES ('%s', '%s', STR_TO_DATE('%s', '%%m/%%d/%%Y'));";
+            sql = String.format(sql, carId, purchaseAmount, purchaseDate);
+
             // Create the purchase record
             rows = sqlStatement.executeUpdate(sql, Statement.RETURN_GENERATED_KEYS);
             resultSet = sqlStatement.getGeneratedKeys();
@@ -501,27 +558,25 @@ public class CarManagementSystem {
 
             // Finish the transaction
             connection.commit();
-            
-            
+
             System.out.println("purchase_id | car_id | purchase_amount | purchase_date ");
             System.out.println("-".repeat(80));
- 
+
             String output = String.format(
-            		"%s | %s | %s | %s",
-            		purchaseId, carId, purchaseAmount, purchaseDate);
+                    "%s | %s | %s | %s",
+                    purchaseId, carId, purchaseAmount, purchaseDate);
             System.out.println(output);
-            
-           
-  
+
+            resultSet.close();
         } catch (SQLException sqlException) {
-        	System.out.println("Failed to create car purchase");
+            System.out.println("Failed to create car purchase");
             System.out.println(sqlException.getMessage());
-        	
+
             try {
-				connection.rollback();
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
+                connection.rollback();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         } finally {
             try {
                 if (sqlStatement != null)
@@ -538,15 +593,52 @@ public class CarManagementSystem {
 
     }
 
+    /**
+     * This method will handle the sale of a car. Specifically, it will add the
+     * car_sale record to the database and print out the purchase
+     * information.
+     *
+     * Note: When a dealership sales a car it needs to check that they have not
+     * already sold the car.
+     */
     public static void saleCar(String carId, String customerId, String saleAmount, String saleDate) {
         Connection connection = null;
         Statement sqlStatement = null;
 
         try {
-            // Make sure car isn't already sold
-        	// then create sales entry
-        	
-        	
+            connection = Database.getDatabaseConnection();
+            sqlStatement = connection.createStatement();
+            // This query checks that no sale record exists for the car before inserting
+            // it into the database.
+            String sql = "INSERT INTO car_sales (car_id, customer_id, sale_amount, sales_date)\n" +
+                    "SELECT  %s , %s,  %s, STR_TO_DATE('%s', '%%m/%%d/%%Y') \n" +
+                    "WHERE NOT EXISTS (SELECT 1\n" +
+                    "                   FROM car_sales\n" +
+                    "                   WHERE  car_id = %s );";
+            sql = String.format(sql, carId, customerId, saleAmount, saleDate, carId);
+
+            int rows = sqlStatement.executeUpdate(sql, Statement.RETURN_GENERATED_KEYS);
+
+            // check if the sale was inserted.
+            if (rows > 0) {
+                ResultSet resultSet = sqlStatement.getGeneratedKeys();
+                resultSet.next();
+                int saleId = resultSet.getInt(1);
+
+                System.out.println("sale_id | car_id | customer_id | sale_amount | sales_date");
+                System.out.println("-".repeat(80));
+
+                String output = String.format(
+                        "%s | %s | %s | %s | %s",
+                        saleId, carId, customerId, saleAmount, saleDate);
+                System.out.println(output);
+
+                resultSet.close();
+            } else {
+                System.out.println("Failed to sale the car. The car has already been sold.");
+            }
+
+
         } catch (SQLException sqlException) {
             System.out.println("Failed to sale car");
             System.out.println(sqlException.getMessage());
@@ -566,12 +658,11 @@ public class CarManagementSystem {
         }
     }
 
-    
 
     /***
      * Splits a string up by spaces. Spaces are ignored when wrapped in quotes.
      *
-     * @param command - School Management System cli command
+     * @param command - Car Management System cli command
      * @return splits a string by spaces.
      */
     public static List<String> parseArguments(String command) {
@@ -610,7 +701,7 @@ public class CarManagementSystem {
 
                 System.out.println("delete customer <customerId> \n\tdeletes the customer");
                 System.out.println("create customer <first_name> <last_name> \n\tcreates a customer");
-                System.out.println("purchase car <Make>, <model>, <category>, <year>,<condition>, <kbp>, <string>, <purchaseDate>\n\tmake a purchase");
+                System.out.println("purchase car <Make>, <model>, <category>, <year>, <condition>, <kbp>, <purchaseAmount>, <purchaseDate>\n\tmake a purchase");
                 System.out.println("sale car <carId>, <customerId>, <saleAmount>, <saleDate>\n\tmake a purchase");
 
                 System.out.println("help \n\tlists help information");
@@ -624,29 +715,29 @@ public class CarManagementSystem {
                 if (commandArguments.get(0).equals("customers")) listCustomers();
                 if (commandArguments.get(0).equals("AvailableCarsForSale")) listAvailableCarsForSale();
                 if (commandArguments.get(0).equals("SalesThisMonth")) listSalesThisMonth();
-                
+
                 if (commandArguments.get(0).equals("AllCarsByCustomer")) {
-                	listAllCarsByCustomer(commandArguments.get(1), commandArguments.get(2));
+                    listAllCarsByCustomer(commandArguments.get(1), commandArguments.get(2));
                 }
-                
+
             } else if (command.equals("create")) {
                 if (commandArguments.get(0).equals("customer")) {
-                	createNewCustomer(commandArguments.get(1), commandArguments.get(2), 
-                			commandArguments.get(3), commandArguments.get(4));
+                    createNewCustomer(commandArguments.get(1), commandArguments.get(2),
+                            commandArguments.get(3), commandArguments.get(4));
                 }
             } else if (command.equals("purchase")) {
                 if (commandArguments.get(0).equals("car")) {
-                	purchaseCar(commandArguments.get(1), commandArguments.get(2), commandArguments.get(3),
-                			commandArguments.get(4),commandArguments.get(5),commandArguments.get(6),
-                			commandArguments.get(7), commandArguments.get(8));
+                    purchaseCar(commandArguments.get(1), commandArguments.get(2), commandArguments.get(3),
+                            commandArguments.get(4), commandArguments.get(5), commandArguments.get(6),
+                            commandArguments.get(7), commandArguments.get(8));
                 }
             } else if (command.equals("sale")) {
                 if (commandArguments.get(0).equals("car")) {
-                	saleCar(commandArguments.get(1), commandArguments.get(2), commandArguments.get(3), commandArguments.get(4));
+                    saleCar(commandArguments.get(1), commandArguments.get(2), commandArguments.get(3), commandArguments.get(4));
                 }
             } else if (command.equals("delete")) {
                 if (commandArguments.get(0).equals("customer")) {
-                	deleteCustomer(commandArguments.get(1));
+                    deleteCustomer(commandArguments.get(1));
                 }
             } else if (!(command.equals("quit") || command.equals("exit"))) {
                 System.out.println(command);
