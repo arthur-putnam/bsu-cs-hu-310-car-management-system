@@ -1,3 +1,5 @@
+package application;
+
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -17,7 +19,7 @@ import java.util.regex.Pattern;
  * best practices, such as using prepared statements and input
  * sanitization, before use in any production environment.
  */
-public class CarManagementSystem {
+public class Main {
 
 
     /**
